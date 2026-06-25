@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZapCart – Online Shopping & Dropshipping</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --white: #FFFFFF;
+    --off-white: #F8F8F6;
+    --black: #0D0D0D;
+    --ink: #1A1A1A;
+    --muted: #6B6B6B;
+    --border: #E5E5E5;
+    --accent: #2563EB;
+    --accent-light: #EFF4FF;
+    --success: #16A34A;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--ink);
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--black); text-decoration: none;
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-right { display: flex; align-items: center; gap: 1rem; }
+  .btn-nav { background: var(--black); color: var(--white); border: none; padding: 0.5rem 1.25rem; border-radius: 6px; font-size: 0.875rem; font-weight: 500; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+  .btn-nav:hover { opacity: 0.8; }
+  .cart-icon { position: relative; cursor: pointer; color: var(--ink); }
+  .cart-badge { position: absolute; top: -6px; right: -6px; background: var(--accent); color: #fff; font-size: 0.65rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+  /* HERO */
+  .hero {
+    padding: 6rem 5% 5rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .hero-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
+    line-height: 1.1; font-weight: 700; color: var(--black);
+    letter-spacing: -1px; margin-bottom: 1.25rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero p { color: var(--muted); font-size: 1.05rem; max-width: 420px; margin-bottom: 2rem; line-height: 1.7; }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { background: var(--black); color: var(--white); padding: 0.85rem 2rem; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: transform 0.15s, box-shadow 0.15s; text-decoration: none; display: inline-block; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+  .btn-outline { background: transparent; color: var(--ink); padding: 0.85rem 2rem; border: 1.5px solid var(--border); border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: border-color 0.2s; text-decoration: none; display: inline-block; }
+  .btn-outline:hover { border-color: var(--ink); }
+  .hero-stats { display: flex; gap: 2rem; margin-top: 2.5rem; }
+  .stat-num { font-size: 1.5rem; font-weight: 700; color: var(--black); }
+  .stat-label { font-size: 0.75rem; color: var(--muted); }
+
+  /* HERO VISUAL */
+  .hero-visual {
+    background: var(--off-white);
+    border-radius: 16px; padding: 2rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    min-height: 380px;
+  }
+  .product-card-mini {
+    background: var(--white); border-radius: 10px;
+    padding: 1rem; display: flex; flex-direction: column;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: transform 0.2s;
+  }
+  .product-card-mini:hover { transform: translateY(-2px); }
+  .product-card-mini:first-child { grid-column: span 2; display: flex; flex-direction: row; gap: 1rem; align-items: center; }
+  .product-img { width: 100%; aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .product-card-mini:first-child .product-img { width: 80px; height: 80px; min-width: 80px; margin-bottom: 0; font-size: 2rem; }
+  .product-name { font-size: 0.8rem; font-weight: 600; color: var(--ink); margin-bottom: 0.25rem; }
+  .product-price { font-size: 0.85rem; font-weight: 700; color: var(--accent); }
+  .product-old-price { font-size: 0.72rem; color: var(--muted); text-decoration: line-through; margin-left: 0.25rem; }
+  .badge-new { display: inline-block; background: var(--success); color: #fff; font-size: 0.6rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .badge-hot { background: #DC2626; }
+
+  /* TRUST BAR */
+  .trust-bar {
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    background: var(--off-white);
+    padding: 1.25rem 5%;
+    display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap;
+  }
+  .trust-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.82rem; font-weight: 500; color: var(--muted); }
+  .trust-icon { font-size: 1.1rem; }
+
+  /* SECTIONS */
+  .section { padding: 5rem 5%; max-width: 1200px; margin: 0 auto; }
+  .section-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.5rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; color: var(--black); letter-spacing: -0.5px; margin-bottom: 0.75rem; }
+  .section-sub { color: var(--muted); font-size: 0.95rem; max-width: 500px; line-height: 1.7; margin-bottom: 3rem; }
+
+  /* CATEGORIES */
+  .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+  .category-card {
+    background: var(--off-white); border-radius: 12px;
+    padding: 1.5rem 1rem; text-align: center;
+    cursor: pointer; transition: background 0.2s, transform 0.15s;
+    border: 1.5px solid transparent;
+  }
+  .category-card:hover { background: var(--accent-light); border-color: var(--accent); transform: translateY(-2px); }
+  .cat-icon { font-size: 2rem; margin-bottom: 0.6rem; display: block; }
+  .cat-name { font-size: 0.82rem; font-weight: 600; color: var(--ink); }
+  .cat-count { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* PRODUCTS */
+  .products-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+  .tab-group { display: flex; gap: 0.25rem; background: var(--off-white); padding: 4px; border-radius: 8px; }
+  .tab { padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 500; cursor: pointer; border: none; background: transparent; font-family: inherit; color: var(--muted); transition: all 0.15s; }
+  .tab.active { background: var(--white); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+  .product-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; transition: box-shadow 0.2s, transform 0.2s; cursor: pointer;
+  }
+  .product-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .product-thumb {
+    aspect-ratio: 1; background: var(--off-white);
+    display: flex; align-items: center; justify-content: center; font-size: 3.5rem;
+    position: relative;
+  }
+  .product-tag {
+    position: absolute; top: 0.75rem; left: 0.75rem;
+    font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .tag-sale { background: #DC2626; color: #fff; }
+  .tag-new { background: var(--success); color: #fff; }
+  .tag-hot { background: #F59E0B; color: #fff; }
+  .product-info { padding: 1rem; }
+  .product-category { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; margin-bottom: 0.35rem; }
+  .product-title { font-size: 0.9rem; font-weight: 600; color: var(--ink); margin-bottom: 0.6rem; line-height: 1.4; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; }
+  .price-group { display: flex; align-items: baseline; gap: 0.4rem; }
+  .price-current { font-size: 1rem; font-weight: 700; color: var(--black); }
+  .price-old { font-size: 0.8rem; color: var(--muted); text-decoration: line-through; }
+  .add-btn { background: var(--black); color: #fff; border: none; width: 32px; height: 32px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+  .add-btn:hover { background: var(--accent); }
+  .star-row { display: flex; align-items: center; gap: 0.3rem; margin-bottom: 0.5rem; }
+  .stars { color: #F59E0B; font-size: 0.75rem; letter-spacing: -1px; }
+  .review-count { font-size: 0.7rem; color: var(--muted); }
+
+  /* DROPSHIPPING */
+  .dropship-section { background: var(--black); color: var(--white); border-radius: 20px; padding: 4rem; margin: 0 5% 5rem; }
+  .dropship-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .dropship-section .section-label { color: #60A5FA; }
+  .dropship-section .section-title { color: var(--white); }
+  .dropship-section .section-sub { color: #9CA3AF; margin-bottom: 2rem; }
+  .steps { display: flex; flex-direction: column; gap: 1.25rem; }
+  .step { display: flex; align-items: flex-start; gap: 1rem; }
+  .step-num { width: 32px; height: 32px; min-width: 32px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: #fff; }
+  .step-text strong { display: block; font-size: 0.9rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem; }
+  .step-text span { font-size: 0.82rem; color: #9CA3AF; }
+  .dropship-visual { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 2rem; }
+  .metric-row { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .metric-row:last-child { border-bottom: none; }
+  .metric-label { font-size: 0.82rem; color: #9CA3AF; }
+  .metric-val { font-size: 1rem; font-weight: 700; color: var(--white); }
+  .metric-val.green { color: #4ADE80; }
+  .btn-white { background: var(--white); color: var(--black); padding: 0.85rem 2rem; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.2s; text-decoration: none; display: inline-block; margin-top: 1.5rem; }
+  .btn-white:hover { opacity: 0.9; }
+
+  /* TESTIMONIALS */
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+  .testimonial-card { background: var(--off-white); border-radius: 12px; padding: 1.5rem; }
+  .testimonial-stars { color: #F59E0B; font-size: 0.9rem; margin-bottom: 0.75rem; }
+  .testimonial-text { font-size: 0.88rem; color: var(--ink); line-height: 1.7; margin-bottom: 1rem; }
+  .testimonial-author { display: flex; align-items: center; gap: 0.75rem; }
+  .author-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+  .author-name { font-size: 0.82rem; font-weight: 600; color: var(--ink); }
+  .author-loc { font-size: 0.72rem; color: var(--muted); }
+
+  /* NEWSLETTER */
+  .newsletter { background: var(--accent-light); border-radius: 16px; padding: 3rem; text-align: center; margin: 0 5% 5rem; }
+  .newsletter h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--black); margin-bottom: 0.75rem; }
+  .newsletter p { color: var(--muted); margin-bottom: 1.5rem; }
+  .newsletter-form { display: flex; gap: 0.75rem; max-width: 440px; margin: 0 auto; }
+  .newsletter-input { flex: 1; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 6px; font-size: 0.9rem; font-family: inherit; background: var(--white); }
+  .newsletter-input:focus { outline: none; border-color: var(--accent); }
+  .btn-accent { background: var(--accent); color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .btn-accent:hover { opacity: 0.9; }
+
+  /* FOOTER */
+  footer { border-top: 1px solid var(--border); padding: 3rem 5% 2rem; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; max-width: 1200px; margin: 0 auto 2rem; }
+  .footer-brand .logo { display: block; margin-bottom: 1rem; font-size: 1.4rem; }
+  .footer-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.7; max-width: 240px; }
+  .footer-col h4 { font-size: 0.82rem; font-weight: 700; color: var(--ink); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 0.6rem; }
+  .footer-col a { font-size: 0.82rem; color: var(--muted); text-decoration: none; transition: color 0.15s; }
+  .footer-col a:hover { color: var(--ink); }
+  .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 1.5rem; border-top: 1px solid var(--border); max-width: 1200px; margin: 0 auto; }
+  .footer-copy { font-size: 0.78rem; color: var(--muted); }
+  .payment-icons { display: flex; gap: 0.5rem; font-size: 1.3rem; }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 5%; }
+    .hero-visual { display: none; }
+    .trust-bar { gap: 1.5rem; }
+    .dropship-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .dropship-section { padding: 2.5rem 1.5rem; margin: 0 4% 4rem; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .newsletter-form { flex-direction: column; }
+    nav .nav-links { display: none; }
+  }
+  @media (max-width: 480px) {
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Zap<span>Cart</span></a>
+  <ul class="nav-links">
+    <li><a href="#categories">Categories</a></li>
+    <li><a href="#products">Shop</a></li>
+    <li><a href="#dropship">Dropship</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="cart-icon" onclick="alert('Cart coming soon!')">
+      🛒
+      <div class="cart-badge">3</div>
+    </div>
+    <button class="btn-nav" onclick="alert('Sign in coming soon!')">Sign In</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="max-width:1200px;margin:0 auto;">
+  <div class="hero">
+    <div>
+      <p class="hero-eyebrow">Pakistan's Fastest-Growing Marketplace</p>
+      <h1>Shop Smart.<br><em>Sell Smarter.</em></h1>
+      <p>Discover thousands of products at wholesale prices. Buy for yourself or dropship directly to your customers — all from one place.</p>
+      <div class="hero-actions">
+        <a href="#products" class="btn-primary">Browse Products</a>
+        <a href="#dropship" class="btn-outline">Start Dropshipping</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">50K+</div>
+          <div class="stat-label">Products</div>
+        </div>
+        <div>
+          <div class="stat-num">12K+</div>
+          <div class="stat-label">Sellers</div>
+        </div>
+        <div>
+          <div class="stat-num">98%</div>
+          <div class="stat-label">Satisfaction</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="product-card-mini">
+        <div class="product-img" style="background:#EFF4FF;">📱</div>
+        <div>
+          <div class="badge-new badge-hot">🔥 Hot</div>
+          <div class="product-name">Wireless Earbuds Pro</div>
+          <div><span class="product-price">Rs 2,499</span><span class="product-old-price">Rs 3,999</span></div>
+        </div>
+      </div>
+      <div class="product-card-mini">
+        <div class="product-img" style="background:#FFF7ED;">👜</div>
+        <div class="badge-new">New</div>
+        <div class="product-name">Leather Handbag</div>
+        <div class="product-price">Rs 1,899</div>
+      </div>
+      <div class="product-card-mini">
+        <div class="product-img" style="background:#F0FDF4;">🏠</div>
+        <div class="badge-new" style="background:#7C3AED;">Sale</div>
+        <div class="product-name">Home Decor Set</div>
+        <div class="product-price">Rs 799</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><span class="trust-icon">🚚</span> Free delivery over Rs 2,000</div>
+  <div class="trust-item"><span class="trust-icon">🔄</span> 7-day easy returns</div>
+  <div class="trust-item"><span class="trust-icon">🔒</span> Secure payments</div>
+  <div class="trust-item"><span class="trust-icon">📦</span> Same-day dispatch</div>
+  <div class="trust-item"><span class="trust-icon">💬</span> 24/7 customer support</div>
+</div>
+
+<!-- CATEGORIES -->
+<div id="categories">
+  <div class="section">
+    <div class="section-label">Browse by Category</div>
+    <div class="section-title">Everything, in One Place</div>
+    <p class="section-sub">From electronics to fashion, home goods to beauty — explore our full range of product categories.</p>
+    <div class="categories-grid">
+      <div class="category-card"><span class="cat-icon">📱</span><div class="cat-name">Electronics</div><div class="cat-count">8,200+ items</div></div>
+      <div class="category-card"><span class="cat-icon">👗</span><div class="cat-name">Fashion</div><div class="cat-count">12,500+ items</div></div>
+      <div class="category-card"><span class="cat-icon">🏠</span><div class="cat-name">Home & Kitchen</div><div class="cat-count">6,800+ items</div></div>
+      <div class="category-card"><span class="cat-icon">💄</span><div class="cat-name">Beauty</div><div class="cat-count">4,100+ items</div></div>
+      <div class="category-card"><span class="cat-icon">🧸</span><div class="cat-name">Kids & Toys</div><div class="cat-count">3,300+ items</div></div>
+      <div class="category-card"><span class="cat-icon">⚽</span><div class="cat-name">Sports</div><div class="cat-count">2,700+ items</div></div>
+      <div class="category-card"><span class="cat-icon">📚</span><div class="cat-name">Books</div><div class="cat-count">1,900+ items</div></div>
+      <div class="category-card"><span class="cat-icon">🛒</span><div class="cat-name">Groceries</div><div class="cat-count">5,000+ items</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div id="products">
+  <div class="section" style="padding-top:0;">
+    <div class="products-header">
+      <div>
+        <div class="section-label">Featured Products</div>
+        <div class="section-title" style="margin-bottom:0;">Top Picks Today</div>
+      </div>
+      <div class="tab-group">
+        <button class="tab active" onclick="setTab(this)">Trending</button>
+        <button class="tab" onclick="setTab(this)">New Arrivals</button>
+        <button class="tab" onclick="setTab(this)">Best Deals</button>
+      </div>
+    </div>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-thumb" style="background:#EFF4FF;"><span class="product-tag tag-sale">−38%</span>📱</div>
+        <div class="product-info">
+          <div class="product-category">Electronics</div>
+          <div class="product-title">Bluetooth Earbuds with Noise Cancellation</div>
+          <div class="star-row"><div class="stars">★★★★★</div><span class="review-count">(214)</span></div>
+          <div class="product-footer">
+            <div class="price-group"><span class="price-current">Rs 2,499</span><span class="price-old">Rs 3,999</span></div>
+            <button class="add-btn" onclick="alert('Added to cart!')">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-thumb" style="background:#FFF7ED;"><span class="product-tag tag-new">New</span>👗</div>
+        <div class="product-info">
+          <div class="product-category">Fashion</div>
+          <div class="product-title">Women's Lawn Embroidered Suit</div>
+          <div class="star-row"><div class="stars">★★★★☆</div><span class="review-count">(87)</span></div>
+          <div class="product-footer">
+            <div class="price-group"><span class="price-current">Rs 1,850</span></div>
+            <button class="add-btn" onclick="alert('Added to cart!')">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-thumb" style="background:#F0FDF4;"><span class="product-tag tag-hot">Hot</span>🏠</div>
+        <div class="product-info">
+          <div class="product-category">Home & Kitchen</div>
+          <div class="product-title">Air Fryer 4.5L Digital Touch</div>
+          <div class="star-row"><div class="stars">★★★★★</div><span class="review-count">(431)</span></div>
+          <div class="product-footer">
+            <div class="price-group"><span class="price-current">Rs 8,900</span><span class="price-old">Rs 11,500</span></div>
+            <button class="add-btn" onclick="alert('Added to cart!')">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-thumb" style="background:#FDF4FF;"><span class="product-tag tag-sale">−25%</span>💄</div>
+        <div class="product-info">
+          <div class="product-category">Beauty</div>
+          <div class="product-title">Skincare Gift Set – Vitamin C Series</div>
+          <div class="star-row"><div class="stars">★★★★☆</div><span class="review-count">(156)</span></div>
+          <div class="product-footer">
+            <div class="price-group"><span class="price-current">Rs 1,299</span><span class="price-old">Rs 1,750</span></div>
+            <button class="add-btn" onclick="alert('Added to cart!')">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-thumb" style="background:#FEFCE8;"><span class="product-tag tag-new">New</span>⌚</div>
+        <div class="product-info">
+          <div class="product-category">Electronics</div>
+          <div class="product-title">Smart Watch with Health Monitor</div>
+          <div class="star-row"><div class="stars">★★★★★</div><span class="review-count">(302)</span></div>
+          <div class="product-footer">
+            <div class="price-group"><span class="price-current">Rs 4,500</span></div>
+            <button class="add-btn" onclick="alert('Added to cart!')">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-thumb" style="background:#FFF1F2;"><span class="product-tag tag-hot">Hot</span>🧸</div>
+        <div class="product-info">
+          <div class="product-category">Kids & Toys</div>
+          <div class="product-title">Educational STEM Building Set</div>
+          <div class="star-row"><div class="stars">★★★★☆</div><span class="review-count">(98)</span></div>
+          <div class="product-footer">
+            <div class="price-group"><span class="price-current">Rs 1,150</span><span class="price-old">Rs 1,500</span></div>
+            <button class="add-btn" onclick="alert('Added to cart!')">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-thumb" style="background:#F0F9FF;"><span class="product-tag tag-sale">−30%</span>🎒</div>
+        <div class="product-info">
+          <div class="product-category">Fashion</div>
+          <div class="product-title">Waterproof Laptop Backpack 30L</div>
+          <div class="star-row"><div class="stars">★★★★★</div><span class="review-count">(189)</span></div>
+          <div class="product-footer">
+            <div class="price-group"><span class="price-current">Rs 2,100</span><span class="price-old">Rs 3,000</span></div>
+            <button class="add-btn" onclick="alert('Added to cart!')">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-thumb" style="background:#F7FEE7;"><span class="product-tag tag-new">New</span>🍳</div>
+        <div class="product-info">
+          <div class="product-category">Home & Kitchen</div>
+          <div class="product-title">Non-Stick Cookware Set (5 Pieces)</div>
+          <div class="star-row"><div class="stars">★★★★☆</div><span class="review-count">(73)</span></div>
+          <div class="product-footer">
+            <div class="price-group"><span class="price-current">Rs 3,200</span></div>
+            <button class="add-btn" onclick="alert('Added to cart!')">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="#" class="btn-outline">View All Products →</a>
+    </div>
+  </div>
+</div>
+
+<!-- DROPSHIPPING -->
+<div id="dropship">
+  <div class="dropship-section">
+    <div class="dropship-inner">
+      <div>
+        <div class="section-label">For Resellers</div>
+        <h2 class="section-title">Build Your Business<br>with Zero Inventory</h2>
+        <p class="section-sub">Join thousands of sellers who earn daily with ZapCart's dropshipping program. No upfront investment needed.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              <strong>Pick Products</strong>
+              <span>Browse 50,000+ items and choose what you want to sell</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <strong>Share & Promote</strong>
+              <span>Share your store link on WhatsApp, Instagram, or Facebook</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              <strong>Earn Profit</strong>
+              <span>We handle packing & delivery — you keep the margin</span>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="btn-white">Start Selling Free →</a>
+      </div>
+      <div>
+        <div class="dropship-visual">
+          <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#9CA3AF;margin-bottom:1rem;">Your Store Dashboard</div>
+          <div class="metric-row"><span class="metric-label">This Month's Orders</span><span class="metric-val">142</span></div>
+          <div class="metric-row"><span class="metric-label">Revenue</span><span class="metric-val green">Rs 87,400</span></div>
+          <div class="metric-row"><span class="metric-label">Net Profit</span><span class="metric-val green">Rs 22,150</span></div>
+          <div class="metric-row"><span class="metric-label">Products Listed</span><span class="metric-val">38</span></div>
+          <div class="metric-row"><span class="metric-label">Repeat Customers</span><span class="metric-val">61%</span></div>
+          <div class="metric-row"><span class="metric-label">Avg. Delivery Time</span><span class="metric-val">2.4 days</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div id="about">
+  <div class="section" style="padding-top:0;">
+    <div class="section-label">What People Say</div>
+    <div class="section-title">Trusted by Thousands</div>
+    <p class="section-sub">Real stories from shoppers and sellers across Pakistan.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"I started dropshipping through ZapCart 4 months ago with zero investment. Now I'm earning Rs 30,000+ per month from my phone. Highly recommend!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">👩</div>
+          <div><div class="author-name">Ayesha Malik</div><div class="author-loc">Lahore, Pakistan</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Delivery was so fast — ordered in the morning and received the same evening! Packaging was neat and the product was exactly as described."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">👨</div>
+          <div><div class="author-name">Usman Raza</div><div class="author-loc">Karachi, Pakistan</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★☆</div>
+        <p class="testimonial-text">"Great prices compared to local markets. The return process was smooth when I needed to exchange a size. Customer service was very helpful."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">👩</div>
+          <div><div class="author-name">Sana Tariq</div><div class="author-loc">Islamabad, Pakistan</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEWSLETTER -->
+<div class="newsletter">
+  <h2>Get Exclusive Deals</h2>
+  <p>Subscribe for weekly offers, new arrivals, and dropshipping tips.</p>
+  <div class="newsletter-form">
+    <input type="email" class="newsletter-input" placeholder="Enter your email address">
+    <button class="btn-accent" onclick="alert('Subscribed! Thank you.')">Subscribe</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo">Zap<span style="color:var(--accent);">Cart</span></a>
+      <p class="footer-desc">Pakistan's fastest-growing online marketplace for shopping and dropshipping. Quality products, fast delivery, zero hassle.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">Electronics</a></li>
+        <li><a href="#">Fashion</a></li>
+        <li><a href="#">Home & Kitchen</a></li>
+        <li><a href="#">Beauty</a></li>
+        <li><a href="#">New Arrivals</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Sell</h4>
+      <ul>
+        <li><a href="#">Start Dropshipping</a></li>
+        <li><a href="#">Seller Dashboard</a></li>
+        <li><a href="#">Commission Rates</a></li>
+        <li><a href="#">Seller Guide</a></li>
+        <li><a href="#">Success Stories</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 ZapCart. All rights reserved.</div>
+    <div class="payment-icons" title="Accepted payment methods">💳 🏦 📱 💵</div>
+  </div>
+</footer>
+
+<script>
+  function setTab(el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>
